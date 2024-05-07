@@ -1,0 +1,19 @@
+<?php
+echo round(2.3);
+echo "<hr>";
+echo round(2.6);
+echo "<hr>";
+echo ceil(2.1);
+echo "<hr>";
+echo floor(2.6);
+echo "<hr>";
+echo sqrt(64);
+echo "<hr>";
+// min,max
+echo abs(-65);
+echo "<hr>";
+echo pi();
+echo "<hr>";
+echo is_finite(20);
+echo "<hr>";
+echo is_infinite(log(0));
