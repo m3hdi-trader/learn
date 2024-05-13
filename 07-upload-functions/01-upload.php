@@ -21,7 +21,7 @@ session_start();
             <?php unset($_SESSION['msg']) ?>
         <?php endif ?>
 
-        <form action="02-upload.php" method="post">
+        <form action="02-upload.php" method="post" enctype="multipart/form-data">
             <div>
                 <input type="file" id="file-upload" name="uploadFile">
             </div>
