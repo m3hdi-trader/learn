@@ -7,7 +7,7 @@ CREATE TABLE people(
     fullname varchar(256),
     age int UNSIGNED ,
     sex enum('f','m'),
-    isSngle boolean DEFAULT 1
+    isSingle boolean DEFAULT 1
 );
 ";
 if($mysqli->query($sql)){
