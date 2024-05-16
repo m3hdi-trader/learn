@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>send ajax</title>
+  </head>
+  <body style="line-height: 50px; text-align: center">
+    <input type="text" id="ajax-input" />
+    <button id="ajax-send">Save in File</button>
+    <div id="ajax-result"></div>
+
+    <script src="js/jquery.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        var btn = $("#ajax-send");
+        var input = $("#ajax-input");
+        var resultTag = $("#ajax-result");
+        btn.click(function () {
+          $.ajax({
+            url: "ajax-handler.php",
+            method: "post",
+            data: { data: input.val() },
+            success: function (response) {
+              resultTag.html(response);
+            },
+            error: function (response) {
+              resultTag.html(response);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

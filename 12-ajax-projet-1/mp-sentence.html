@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random sentens</title>
+  </head>
+  <body style="padding: 50px; text-align: center">
+    <h1>Random sentens</h1>
+    <div id="rSentence">
+      ز آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را
+      ندارند
+    </div>
+
+    <script src="js/jquery.js"></script>
+
+    <script>
+      setInterval(function () {
+        $.ajax({
+          url: "ajax-sentence-generator.php",
+          success: function (response) {
+            $("#rSentence").html(response);
+          },
+          error: function (response) {
+            $("#rSentence").html(response);
+          },
+        });
+      }, 5000);
+    </script>
+  </body>
+</html>
