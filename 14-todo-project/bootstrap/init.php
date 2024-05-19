@@ -9,7 +9,7 @@ include "libs/lib-auto.php";
 $dsn = "mysql:dbname=$databas_config->db;host:={$databas_config->host}";
 
 try {
-    $db = new pdo($dsn, $databas_config->user, $databas_config->pass);
+    $pdo = new pdo($dsn, $databas_config->user, $databas_config->pass);
 } catch (PDOException $pe) {
     diePage($pe->getMessage());
 }
