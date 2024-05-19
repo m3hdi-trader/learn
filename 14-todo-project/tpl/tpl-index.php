@@ -31,6 +31,9 @@
             <li> <i class="fa fa-envelope"></i>Messages</li>
           </ul>
         </div>
+        <div><i class="fa fa-search"></i>
+          <input type="search" placeholder="Search" />
+        </div>
       </div>
       <div class="view">
         <div class="viewHeader">
