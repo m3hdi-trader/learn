@@ -24,61 +24,56 @@
         </div>
         <div class="menu">
           <div class="title">Folders</div>
-
-          <ul>
+          <ul class="folderList">
+            <li class="<?= isset($_GET['folder_id']) ? 'active-all' : 'active' ?>"> <i class="fa fa-folder"></i>All</li>
             <?php foreach ($folders as $folder) : ?>
-              <li>
+              <li class="<?= ($_GET['folder_id'] == $folder->id) ? 'active' : '' ?>">
                 <a href="?folder_id=<?= $folder->id ?>">
                   <i class="fa fa-folder"></i><?= $folder->name ?>
                 </a>
-                <a class="remove" href="?delete_dolder=<?= $folder->id ?>">
-                  <i class="fa-solid fa-xmark"></i>
+                <a class="remove" href="?delete_folder=<?= $folder->id ?>" onclick=" return confirm('Are you sure delete this item ?')">
+                  <i class=" fa-solid fa-xmark"></i>
                 </a>
               </li>
             <?php endforeach; ?>
-            <!-- <li class="active"> <i class="fa fa-folder"></i>Current Folder</li> -->
           </ul>
 
         </div>
         <div>
           <input type="text" class="input-add-new-folder" id="addNewFolder" placeholder="Add New Folder" />
-          <button id="addNewBtn" class="btn">+</button>
+          <button id="addNewBtn" class="btn clickable">+</button>
         </div>
       </div>
       <div class="view">
         <div class="viewHeader">
-          <div class="title">Manage Tasks</div>
+          <div class="title">
+            <input type="text" class="input-add-new-task" id="addNewTask" placeholder="Add New Task" />
+          </div>
           <div class="functions">
             <div class="button active">Add New Task</div>
             <div class="button">Completed</div>
-            <div class="button inverz"><i class="fa fa-trash-o"></i></div>
           </div>
         </div>
         <div class="content">
           <div class="list">
             <div class="title">Today</div>
             <ul>
-              <li class="checked"><i class="fa fa-check-square-o"></i><span>Update team page</span>
-                <div class="info">
-                  <div class="button green">In progress</div><span>Complete by 25/04/2014</span>
-                </div>
-              </li>
-              <li><i class="fa fa-square-o"></i><span>Design a new logo</span>
-                <div class="info">
-                  <div class="button">Pending</div><span>Complete by 10/04/2014</span>
-                </div>
-              </li>
-              <li><i class="fa fa-square-o"></i><span>Find a front end developer</span>
-                <div class="info"></div>
-              </li>
-            </ul>
-          </div>
-          <div class="list">
-            <div class="title">Tomorrow</div>
-            <ul>
-              <li><i class="fa fa-square-o"></i><span>Find front end developer</span>
-                <div class="info"></div>
-              </li>
+              <?php if (sizeof($tasks) > 0) : ?>
+                <?php foreach ($tasks as $task) : ?>
+                  <li class="<?= $task->is_done ? 'checked' : ''; ?> ">
+                    <i class="fa-regular <?= $task->is_done ? 'fa-square-check' : 'fa-square'; ?>"></i>
+                    <span><?= $task->title ?></span>
+                    <div class="info">
+                      <span class="created-at">Created at <?= $task->created_at ?></span>
+                      <a class="remove-task" href="?delete_task=<?= $task->id ?>" onclick="return confirm('Are you sure delete this item ?')">
+                        <i class="fa-solid fa-xmark"></i>
+                      </a>
+                    </div>
+                  </li>
+                <?php endforeach; ?>
+              <?php else : ?>
+                <li>No Tasks here...</li>
+              <?php endif; ?>
             </ul>
           </div>
         </div>
@@ -88,6 +83,32 @@
   <!-- partial -->
   <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
   <script src="assets/js/script.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#addNewBtn').click(function(e) {
+        var input = $('input#addNewFolder');
+        $.ajax({
+          url: "process/ajaxHandler.php",
+          method: "post",
+          data: {
+            action: "addFolder",
+            folderName: input.val()
+          },
+          success: function(response) {
+            if (response == 1) {
+              $('<li><a href="?folder_id=#"><i class="fa fa-folder"></i>' + input.val() + '</a><a class="remove" href="?delete_dolder=1"><i class="fa-solid fa-xmark"></i></a></li>')
+                .appendTo('ul.folderList')
+              input.val("")
+            } else {
+              alert(response);
+            }
+          }
+        });
+
+      });
+    });
+  </script>
 
 </body>
 

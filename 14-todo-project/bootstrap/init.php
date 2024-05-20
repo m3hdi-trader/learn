@@ -1,9 +1,9 @@
 <?php
 
 include "constans.php";
-include "config.php";
-include "libs/helper.php";
-include "libs/lib-auto.php";
+include BASE_PATH . "bootstrap/config.php";
+include BASE_PATH . "libs/helper.php";
+include BASE_PATH .  "libs/lib-auto.php";
 
 
 $dsn = "mysql:dbname=$databas_config->db;host:={$databas_config->host}";
@@ -13,7 +13,7 @@ try {
 } catch (PDOException $pe) {
     diePage($pe->getMessage());
 }
-include "libs/lib-tacks.php";
-include "vendor/autoload.php";
+include BASE_PATH . "libs/lib-tacks.php";
+include BASE_PATH . "vendor/autoload.php";
 
 // echo "connection to database ok!";
