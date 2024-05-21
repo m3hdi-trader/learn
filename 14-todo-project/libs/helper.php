@@ -6,7 +6,16 @@ function diePage($msg)
     echo "<div style ='padding: 30px; width: 80%; margin: 50px auto; background: #fad7d7; border: 1px solid #cca4a4; color: #521717; border-radius: 5px; font-family: sans-serif;'>$msg</div>";
     die();
 }
+function massage($msg, $cssClass = 'green')
+{
+    echo "<div style='width: 20%;position: absolute;z-index: 999;'><div style='padding: 22px;margin-left: 16px;' class='w3-panel w3-$cssClass w3-round'>$msg</div></div>";
+    // echo "<div class='$cssClass''>$msg</div>";
+}
 
+function siteUrl($uri = '')
+{
+    return BASE_URL . $uri;
+}
 
 function isAjaxRequest()
 {

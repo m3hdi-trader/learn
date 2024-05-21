@@ -80,4 +80,23 @@ function delteTask($task_id)
     #endregion
 }
 
+function addTask($taskTitle, $folder_id)
+{
+    global $pdo;
+    $getCurrentUserId = getCurrentUserId();
+    $sql = "INSERT INTO `tasks` (title,user_id,folder_id) VALUES (:title,:userID,:folderId); ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':title' => $taskTitle, ':userID' => $getCurrentUserId, ':folderId' => $folder_id]);
+    return $stmt->rowCount();
+}
 #endregion
+
+function doneSwitch($task_id)
+{
+    global $pdo;
+    $getCurrentUserId = getCurrentUserId();
+    $sql = "Update `tasks` set is_done=1-is_done where user_id=:userId and id=:taskId ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':taskId' => $task_id, ':userId' => $getCurrentUserId]);
+    return $stmt->rowCount();
+}
