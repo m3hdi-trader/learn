@@ -15,7 +15,7 @@ switch ($_POST['action']) {
         //region case addfolder
     case "addFolder":
         if (!isset($_POST['folderName']) || strlen($_POST['folderName']) < 3) {
-            echo " نام فولدر باید بیشتر از دو حرف باشد";
+            echo message("نام فولدر باید بیشتر از دو حرف باشد", 'red');
             die();
         }
         echo addFolder($_POST['folderName']);
@@ -29,11 +29,11 @@ switch ($_POST['action']) {
         $taskTitle = $_POST['taskTitle'];
 
         if (!isset($folderId) || empty($folderId)) {
-            echo "فولدر خود را انتخاب کنید";
+            echo message("فولدر خود را انتخاب کنید", 'red');
             die();
         }
         if (!isset($taskTitle) || strlen($taskTitle) < 3) {
-            echo "نام تسک باید بیشتر از دو حرف باشد";
+            echo message("نام تسک باید بیشتر از دو حرف باشد", 'red');
             die();
         }
         echo addTask($taskTitle, $folderId);
@@ -42,7 +42,7 @@ switch ($_POST['action']) {
     case "doneSwitch":
         $taskId = $_POST['taskId'];
         if (!isset($taskId) || !is_numeric($taskId)) {
-            echo "آیدی معتبر نمی باشد";
+            echo message("آیدی معتبر نمی باشد", 'red');
             die();
         }
         doneSwitch($taskId);

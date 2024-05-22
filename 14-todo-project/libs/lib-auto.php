@@ -1,19 +1,55 @@
 <?php
+
+
 defined('BASE_PATH') or die("Permision Denied!");
 #Auth Function
 function getCurrentUserId()
 {
-    return 1;
+    return getCurrentUser()->id ?? 0;
 }
 
 function isLoggedIn()
 {
-    return false;
+    return isset($_SESSION['login']) ? true : false;
 }
 
-function login($user, $password)
+function getCurrentUser()
 {
-    return 1;
+    return $_SESSION['login'] ?? null;
+}
+
+function getUserByEmail($email)
+{
+    global $pdo;
+
+    $sql = "SELECT * FROM `users` WHERE email= :email";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':email' => $email]);
+    $records = $stmt->fetchAll(PDO::FETCH_OBJ);
+    return $records[0] ?? null;
+}
+
+function logout()
+{
+    unset($_SESSION['login']);
+}
+
+function login($email, $password)
+{
+    $user = getUserByEmail($email);
+
+    if (!$user) {
+        return false;
+    }
+    #check the password
+    if (password_verify($password, $user->password)) {
+
+        $user->image = "https://www.gravatar.com/avatar/" . hash("sha256", strtolower(trim($user->email)));
+
+        $_SESSION['login'] = $user;
+        return true;
+    }
+    return false;
 }
 
 function register($userData)

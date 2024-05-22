@@ -13,8 +13,10 @@
   <div class="page">
     <div class="pageHeader">
       <div class="title">Dashboard</div>
-      <div class="userPanel"><i class="fa fa-chevron-down"></i><span class="username">John Doe </span>
-        <img src="" width="40" height="40" />
+      <div class="userPanel">
+        <a href="<?= siteUrl("?logout=1") ?>"><i class="fa fa-sign-out-alt"></i></a>
+        <span class="username"><?= getCurrentUser()->name ?></span>
+        <img src="<?= getCurrentUser()->image ?>" width="40" height="40" />
       </div>
     </div>
 
