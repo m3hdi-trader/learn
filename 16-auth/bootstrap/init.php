@@ -1,7 +1,10 @@
 <?php
+session_start();
+date_default_timezone_set('Asia/Tehran');
 require 'constans.php';
 require 'config.php';
 require BASE_PATH . 'libs/helpers.php';
+require BASE_PATH . 'libs/auth-lib.php';
 
 
 try {
