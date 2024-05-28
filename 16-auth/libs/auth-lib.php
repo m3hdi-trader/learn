@@ -67,3 +67,59 @@ function sendTokenByEmail(string $email, string|int $token): bool
     $phpmailer->Body = 'is Token : ' . $token;
     return $phpmailer->send();
 }
+
+function changeLoginSession(string $email, string $session = null): bool
+{
+    global $pdo;
+    $sql = 'UPDATE `users` SET `session` = :session WHERE `email` =:email;';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':session' => $session, ':email' => $email]);
+    return $stmt->rowCount() ? true : false;
+}
+
+
+function deleteTokenByHash(string $hash): bool
+{
+    global $pdo;
+    $sql = 'DELETE FROM `tokens`WHERE hash=:hash;';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':hash' => $hash]);
+    return $stmt->rowCount() ? true : false;
+}
+
+
+
+function getAuthenticateUserBySession(string $session): object|bool
+{
+    global $pdo;
+    $sql = 'SELECT * FROM `users`WHERE `session`=:session;';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':session' => $session]);
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
+function isloggedIn(): bool
+{
+    if (!isset($_COOKIE['auth'])) {
+        return false;
+    } else {
+        return getAuthenticateUserBySession($_COOKIE['auth']) ? true : false;
+    }
+}
+
+
+function deleteExpiredToken(): int
+{
+    global $pdo;
+    $sql = 'DELETE FROM `tokens`WHERE expired_at<now();';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    return $stmt->rowCount();
+}
+
+function logout(string $email)
+{
+    changeLoginSession($email);
+    setcookie('auth', '', time() - 60, '/');
+    redirect('auth.php');
+}

@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+require "bootstrap/init.php";
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uesr Profile</title>
-</head>
+if (!isloggedIn()) {
+    redirect('auth.php?action=login');
+}
 
-<body>
-    <h1 style="text-align: center;">Uesr Profile</h1>
+$userData = getAuthenticateUserBySession($_COOKIE['auth']);
 
-</body>
+if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    logout($userData->email);
+}
 
-</html>
+include 'tpl/index.tpl.php';
