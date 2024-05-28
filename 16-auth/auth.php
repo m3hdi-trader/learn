@@ -29,8 +29,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'verify' && !empty($_SESSION['e
         setErrorAndRedirect('Users not exists with this data!', 'auth.php?action=login');
     }
     if (isset($_SESSION['hash']) && isAliveToken($_SESSION['hash'])) {
+        sendTokenByEmail($_SESSION['email'], findTokenByHash($_SESSION['hash'])->token);
     } else {
         $tokenResult = creatLoginToken();
+        sendTokenByEmail($_SESSION['email'], $tokenResult['token']);
+
         $_SESSION['hash'] = $tokenResult['hash'];
     }
 

@@ -1,4 +1,6 @@
 <?php
+
+
 $dataBaseConfig = (object)[
     'host' => 'localhost',
     'user' => 'root',

@@ -2,9 +2,11 @@
 session_start();
 date_default_timezone_set('Asia/Tehran');
 require 'constans.php';
+require BASE_PATH . 'vendor/autoload.php';
 require 'config.php';
 require BASE_PATH . 'libs/helpers.php';
 require BASE_PATH . 'libs/auth-lib.php';
+require 'mail.php';
 
 
 try {

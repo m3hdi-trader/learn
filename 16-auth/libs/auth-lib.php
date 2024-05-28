@@ -45,15 +45,25 @@ function isAliveToken(string $hash): bool
     if (!$record) {
         return false;
     }
-    return $record->expired_at > time() + 120;
+    return strtotime($record->expired_at) > time() + 120;
 }
 
 
-function findTokenByHash(string $hash): object
+function findTokenByHash(string $hash): object|bool
 {
     global $pdo;
     $sql = 'SELECT * FROM `tokens` WHERE `hash`=:hash;';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':hash' => $hash]);
     return $stmt->fetch(PDO::FETCH_OBJ);
+}
+
+
+function sendTokenByEmail(string $email, string|int $token): bool
+{
+    global $phpmailer;
+    $phpmailer->addAddress($email);
+    $phpmailer->Subject = 'auth veify token';
+    $phpmailer->Body = 'is Token : ' . $token;
+    return $phpmailer->send();
 }
