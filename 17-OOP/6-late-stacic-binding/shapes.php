@@ -2,8 +2,6 @@
 
 class Shape
 {
-
-
     public function draw()
     {
         echo static::class . PHP_EOL;
@@ -13,10 +11,7 @@ class Shape
 
 class Rectangel extends Shape
 {
-
-
     //OverRiding
-
 }
 
 class Square extends Shape
@@ -27,7 +22,6 @@ class Circle extends Shape
 {
 }
 // -----------------------------------------------------
-
 
 // $shape->draw();
 $sh = new Shape();
