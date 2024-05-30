@@ -10,7 +10,6 @@ class Shape
     }
 }
 
-
 class Rectangel extends Shape
 {
     protected $name = 'Rectangle';
