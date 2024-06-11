@@ -1,4 +1,7 @@
 <?php
+define('CACHE_ENABLE', 1);
+define('CACHE_DIR', __DIR__ . '/cache');
+
 include_once "App/iran.php";
 
 

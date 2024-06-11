@@ -3,6 +3,10 @@ include '../../../loader.php';
 
 use App\Services\CityService;
 use App\Utilities\Response;
+use App\Utilities\CacheUtilitiy;
+
+// echo "salam" . rand(1, 999);
+
 
 $requestMthode = $_SERVER['REQUEST_METHOD'];
 
@@ -15,7 +19,10 @@ $cityService = new CityService();
 switch ($requestMthode) {
 
     case 'GET':
+
         $cityService = new CityService();
+        CacheUtilitiy::start();
+
         $provinceId = $_GET['province_id'] ?? null;
         #do validate :$province_id 🤷‍♂️🤦‍♂️
         $requestData = [
@@ -30,7 +37,9 @@ switch ($requestMthode) {
         if (empty($response)) {
             Response::respondAndDie($response, Response::HTTP_NOT_FOUND);
         } else {
-            Response::respondAndDie($response, Response::HTTP_OK);
+            echo Response::respond($response, Response::HTTP_OK);
+            CacheUtilitiy::end();
+            die();
         }
         // ------------------------------------------------------------------------
     case 'POST':
