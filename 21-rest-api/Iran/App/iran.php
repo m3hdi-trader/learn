@@ -53,12 +53,11 @@ function getCities($data = null)
     $whiteList = ['name', 'id', '*', 'province_id'];
     if (!is_null($fields)) {
         $fields_array = explode(",", $fields);
-        foreach ($fields_array as $fields) {
-            if (!in_array($fields, $whiteList))
-                Response::respondAndDie(["Invalid column $fields"], Response::HTTP_NOT_FOUND);
+        foreach ($fields_array as $field) {
+            if (!in_array($field, $whiteList))
+                Response::respondAndDie(["Invalid column $field"], Response::HTTP_NOT_FOUND);
         }
     }
-
     $sql = "select $fields from city $where  $orderbyString  $limit";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -167,7 +166,56 @@ function createApiToken($user)
     $paylode = ['user_id' => $user->id];
     return JWT::encode($paylode, JWT_KEY, JWT_ALG);
 }
+function isValidToken($jwt_token)
+{
+    try {
+        $payload = JWT::decode($jwt_token, new key(JWT_KEY, JWT_ALG));
+        $user = getUserById($payload->user_id);
+        return $user;
+    } catch (Exception $e) {
+        return false;
+    }
+}
 
+function hasAccessToProvince($user, $province_id)
+{
+    return (in_array($province_id, $user->allowed_provinces) or
+        in_array($user->role, ['admin', 'president']));
+}
+
+
+function getAuthorizationHeader()
+{
+    $headers = null;
+    if (isset($_SERVER['Authorization'])) {
+        $headers = trim($_SERVER["Authorization"]);
+    } else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+        $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+    } elseif (function_exists('apache_request_headers')) {
+        $requestHeaders = apache_request_headers();
+        // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
+        $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
+        //print_r($requestHeaders);
+        if (isset($requestHeaders['Authorization'])) {
+            $headers = trim($requestHeaders['Authorization']);
+        }
+    }
+    return $headers;
+}
+/**
+ * get access token from header
+ * */
+function getBearerToken()
+{
+    $headers = getAuthorizationHeader();
+    // HEADER: Get the access token from the header
+    if (!empty($headers)) {
+        if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+            return $matches[1];
+        }
+    }
+    return null;
+}
 // Function Tests
 // $data = addCity(['province_id' => 23,'name' => "Loghman Shahr"]);
 // $data = addProvince(['name' => "7Learn"]);

@@ -7,6 +7,15 @@ use App\Utilities\CacheUtilitiy;
 
 // echo "salam" . rand(1, 999);
 
+$token = getBearerToken();
+$user = isValidToken($token);
+if (!$user) {
+    Response::respondAndDie(['Invalid Token!'], Response::HTTP_UNAUTHORIZED);
+}
+
+
+
+
 
 $requestMthode = $_SERVER['REQUEST_METHOD'];
 
@@ -19,8 +28,12 @@ $cityService = new CityService();
 switch ($requestMthode) {
 
     case 'GET':
+        $provinceId = $_GET['province_id'] ?? null;
+        if (!hasAccessToProvince($user, $provinceId)) {
+            Response::respondAndDie(['You have no access to this province'], Response::HTTP_FORBIDDEN);
+        }
 
-        $cityService = new CityService();
+
         CacheUtilitiy::start();
 
         $provinceId = $_GET['province_id'] ?? null;
