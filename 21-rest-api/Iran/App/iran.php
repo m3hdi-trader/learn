@@ -1,4 +1,7 @@
 <?php
+
+use App\Utilities\Response;
+
 try {
     $pdo = new PDO("mysql:dbname=iran;host=localhost", 'root', '');
     $pdo->exec("set names utf8;");
@@ -25,11 +28,36 @@ function getCities($data = null)
 {
     global $pdo;
     $province_id = $data['province_id'] ?? null;
+    $fields = $data['fields'] ?? '*';
+    $orderby = $data['orderby'] ?? null;
+    $page = $data['page'] ?? null;
+    $pagesize = $data['pagesize'] ?? null;
+    $orderbyString = '';
+    if (!is_null($orderby)) {
+        $orderbyString = "order by  $orderby ";
+    }
+    $limit = '';
+
+    if (is_numeric($page) and is_numeric($pagesize)) {
+        $strat = ($page - 1) * $pagesize;
+        $limit = " LIMIT $strat,$pagesize";
+    }
     $where = '';
     if (!is_null($province_id) and is_numeric($province_id)) {
         $where = "where province_id = {$province_id} ";
     }
-    $sql = "select * from city $where";
+
+    # validate fields
+    $whiteList = ['name', 'id', '*', 'province_id'];
+    if (!is_null($fields)) {
+        $fields_array = explode(",", $fields);
+        foreach ($fields_array as $fields) {
+            if (!in_array($fields, $whiteList))
+                Response::respondAndDie(["Invalid column $fields"], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    $sql = "select $fields from city $where  $orderbyString  $limit";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $records = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -116,8 +144,8 @@ function deleteProvince($province_id)
 // $data = getProvinces();
 // $data = deleteCity(443);
 // $data = changeCityName(445,"لقمان شهر");
-$data = getCities(['province_id' => 4]);
-$data = json_encode($data);
+// $data = getCities(['province_id' => 4]);
+// $data = json_encode($data);
 // echo "<pre>";
 // print_r($data);
 // echo "<pre>";

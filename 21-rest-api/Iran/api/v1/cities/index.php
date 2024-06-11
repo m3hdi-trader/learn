@@ -19,7 +19,11 @@ switch ($requestMthode) {
         $provinceId = $_GET['province_id'] ?? null;
         #do validate :$province_id 🤷‍♂️🤦‍♂️
         $requestData = [
-            'province_id' => $provinceId
+            'province_id' => $provinceId,
+            'fields' => $_GET['fields'] ?? null,
+            'orderby' => $_GET['orderby'] ?? null,
+            'page' => $_GET['page'] ?? null,
+            'pagesize' => $_GET['pagesize'] ?? null,
 
         ];
         $response = $cityService->getCities($requestData);
