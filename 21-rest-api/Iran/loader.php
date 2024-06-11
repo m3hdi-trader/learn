@@ -1,7 +1,13 @@
 <?php
-define('CACHE_ENABLE', 1);
+define('CACHE_ENABLE', 0);
 define('CACHE_DIR', __DIR__ . '/cache');
 
+
+define('JWT_KEY', 'mohammad12345gegegee');
+define('JWT_ALG', 'HS256');
+
+
+include_once "vendor/autoload.php";
 include_once "App/iran.php";
 
 
