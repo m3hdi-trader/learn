@@ -4,8 +4,6 @@ namespace App\Helpers;
 
 use App\Exceptions\ConfigFileNotFoundException;
 
-use function PHPUnit\Framework\returnArgument;
-
 class Config
 {
     public static function getFileContents(string $fileName)
