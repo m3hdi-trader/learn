@@ -3,6 +3,7 @@
 namespace App\Database;
 
 use App\Contracts\DatabaseConnectionInterface;
+use PDO;
 
 class PdoQueryBilder
 {
@@ -62,5 +63,13 @@ class PdoQueryBilder
         $query->execute($this->value);
 
         return $query->rowCount();
+    }
+    public function truncateAllTable()
+    {
+        $query = $this->Connection->prepare("SHOW TABLES");
+        $query->execute();
+        foreach ($query->fetchAll(PDO::FETCH_COLUMN) as $table) {
+            $query = $this->Connection->prepare("TRUNCATE TABLE `{$table}`")->execute();
+        }
     }
 }

@@ -50,4 +50,9 @@ class PdoQueryBilderTest extends TestCase
         ];
         return $this->queryBilder->table('bugs')->create($data);
     }
+    public function tearDown(): void
+    {
+        $this->queryBilder->truncateAllTable();
+        parent::tearDown();
+    }
 }
