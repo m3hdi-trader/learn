@@ -41,6 +41,8 @@ class PdoQueryBilder
         return (int)$this->Connection->lastInsertId();
     }
 
+
+
     public function where(string $coulm, string $value)
     {
         $this->condition[] = "{$coulm}=?";
@@ -64,12 +66,21 @@ class PdoQueryBilder
 
         return $query->rowCount();
     }
+    public function delete()
+    {
+        $condition = implode("and", $this->condition);
+
+        $sql = "DELETE FROM {$this->table} WHERE {$condition}";
+        $query = $this->Connection->prepare($sql);
+        $query->execute($this->value);
+        return $query->rowCount();
+    }
     public function truncateAllTable()
     {
         $query = $this->Connection->prepare("SHOW TABLES");
         $query->execute();
         foreach ($query->fetchAll(PDO::FETCH_COLUMN) as $table) {
-            $query = $this->Connection->prepare("TRUNCATE TABLE `{$table}`")->execute();
+            $this->Connection->prepare("TRUNCATE TABLE `{$table}`")->execute();
         }
     }
 }

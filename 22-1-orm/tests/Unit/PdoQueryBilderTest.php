@@ -33,6 +33,16 @@ class PdoQueryBilderTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
+    public function testItCanDeleteRecord()
+    {
+        $result = $this->InsertInToDb();
+        $result = $this->InsertInToDb();
+        $result = $this->InsertInToDb();
+        $result = $this->InsertInToDb();
+        $result = $this->queryBilder->table('bugs')->where('user', 'mohammad')->delete();
+        $this->assertEquals(4, $result);
+    }
+
 
     private function getConfig()
     {
