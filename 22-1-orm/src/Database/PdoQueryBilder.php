@@ -71,10 +71,11 @@ class PdoQueryBilder
         return $query->rowCount();
     }
 
-    public function get()
+    public function get(array $colums = ['*'])
     {
         $condition = implode("and", $this->condition);
-        $sql = "SELECT * FROM {$this->table} WHERE {$condition}";
+        $colums = implode(",", $colums);
+        $sql = "SELECT {$colums} FROM {$this->table} WHERE {$condition}";
         $query = $this->Connection->prepare($sql);
         $query->execute($this->value);
         return $query->fetchAll();

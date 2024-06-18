@@ -62,9 +62,21 @@ class PdoQueryBilderTest extends TestCase
         $this->mulitipleInSertInToDb(10);
         $this->mulitipleInSertInToDb(10, ['user' => 'Reza']);
         $result = $this->queryBilder->table('bugs')->where('user', 'Reza')->get();
-        var_dump($result);
+        // var_dump($result);
         $this->assertIsArray($result);
         $this->assertCount(10, $result);
+    }
+
+    public function testItCanFetchSpecificColums()
+    {
+        $this->mulitipleInSertInToDb(10);
+        $this->mulitipleInSertInToDb(10, ['name' => 'New']);
+        $result = $this->queryBilder->table('bugs')->where('name', 'New')->get(['name', 'user']);
+        $this->assertIsArray($result);
+        $this->assertObjectHasProperty('name', $result[0]);
+        $this->assertObjectHasProperty('user', $result[0]);
+        $result = json_decode(json_encode($result[0]), true);
+        $this->assertEquals(['name', 'user'], array_keys($result));
     }
 
     private function getConfig()
