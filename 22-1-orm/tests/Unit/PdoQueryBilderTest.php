@@ -57,6 +57,16 @@ class PdoQueryBilderTest extends TestCase
         $this->assertEquals(4, $result);
     }
 
+    public function testItCanFetchData()
+    {
+        $this->mulitipleInSertInToDb(10);
+        $this->mulitipleInSertInToDb(10, ['user' => 'Reza']);
+        $result = $this->queryBilder->table('bugs')->where('user', 'Reza')->get();
+        var_dump($result);
+        $this->assertIsArray($result);
+        $this->assertCount(10, $result);
+    }
+
     private function getConfig()
     {
         return $config = Config::get("database", "pdo_testing");
@@ -72,6 +82,13 @@ class PdoQueryBilderTest extends TestCase
             'email' => 'mohammad@gmail.com'
         ], $options);
         return $this->queryBilder->table('bugs')->create($data);
+    }
+
+    private function mulitipleInSertInToDb($count, $options = [])
+    {
+        for ($i = 0; $i < $count; $i++) {
+            $this->InsertInToDb($options);
+        }
     }
 
     public function tearDown(): void

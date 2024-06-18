@@ -71,6 +71,15 @@ class PdoQueryBilder
         return $query->rowCount();
     }
 
+    public function get()
+    {
+        $condition = implode("and", $this->condition);
+        $sql = "SELECT * FROM {$this->table} WHERE {$condition}";
+        $query = $this->Connection->prepare($sql);
+        $query->execute($this->value);
+        return $query->fetchAll();
+    }
+
     public function truncateAllTable()
     {
         $query = $this->Connection->prepare("SHOW TABLES");
