@@ -18,8 +18,6 @@ class PdoQueryBilder
         $this->Connection = $Connection->getConnection();
     }
 
-
-
     public function table(string $table)
     {
         $this->table = $table;
@@ -35,19 +33,15 @@ class PdoQueryBilder
         $fileds = implode(',', array_keys($data));
         $placeholder = implode(',', $placeholder);
         $sql = "INSERT INTO {$this->table} ({$fileds}) VALUES({$placeholder})";
-        // var_dump($sql);
         $query = $this->Connection->prepare($sql);
         $query->execute(array_values($data));
         return (int)$this->Connection->lastInsertId();
     }
 
-
-
     public function where(string $coulm, string $value)
     {
         $this->condition[] = "{$coulm}=?";
         $this->value[] = $value;
-        // $sql="UPDATE {$this->table} SET VAL";
         return $this;
     }
 
@@ -66,6 +60,7 @@ class PdoQueryBilder
 
         return $query->rowCount();
     }
+
     public function delete()
     {
         $condition = implode("and", $this->condition);
@@ -75,6 +70,7 @@ class PdoQueryBilder
         $query->execute($this->value);
         return $query->rowCount();
     }
+
     public function truncateAllTable()
     {
         $query = $this->Connection->prepare("SHOW TABLES");
@@ -82,5 +78,15 @@ class PdoQueryBilder
         foreach ($query->fetchAll(PDO::FETCH_COLUMN) as $table) {
             $this->Connection->prepare("TRUNCATE TABLE `{$table}`")->execute();
         }
+    }
+
+    public function beginTransaction()
+    {
+        $this->Connection->beginTransaction();
+    }
+
+    public function rollback()
+    {
+        $this->Connection->rollback();
     }
 }

@@ -5,16 +5,17 @@ namespace Tests\Unit;
 use App\Database\PdoDatabaseConnection;
 use App\Database\PdoQueryBilder as DatabasePdoQueryBilder;
 use App\Helpers\Config;
-use PdoQueryBilder;
 use PHPUnit\Framework\TestCase;
 
 class PdoQueryBilderTest extends TestCase
 {
     private $queryBilder;
+
     public function setup(): void
     {
         $pdoConnection = new PdoDatabaseConnection($this->getConfig());
         $this->queryBilder = new DatabasePdoQueryBilder($pdoConnection->connect());
+        $this->queryBilder->beginTransaction();
         parent::setup();
     }
 
@@ -24,6 +25,7 @@ class PdoQueryBilderTest extends TestCase
         $this->assertIsInt($result);
         $this->assertGreaterThan(0, $result);
     }
+
     public function testItCanUpdateData()
     {
         $this->InsertInToDb();
@@ -43,7 +45,6 @@ class PdoQueryBilderTest extends TestCase
         $this->assertEquals(4, $result);
     }
 
-
     private function getConfig()
     {
         return $config = Config::get("database", "pdo_testing");
@@ -60,9 +61,12 @@ class PdoQueryBilderTest extends TestCase
         ];
         return $this->queryBilder->table('bugs')->create($data);
     }
+
     public function tearDown(): void
     {
-        $this->queryBilder->truncateAllTable();
+        // $this->queryBilder->truncateAllTable();
+        $this->queryBilder->rollback();
+
         parent::tearDown();
     }
 }
