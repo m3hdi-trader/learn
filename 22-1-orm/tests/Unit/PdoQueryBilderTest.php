@@ -35,6 +35,18 @@ class PdoQueryBilderTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
+    public function testItCanUpdateMultipleWhere()
+    {
+        $this->InsertInToDb();
+        $this->InsertInToDb(['user' => 'ali']);
+
+        $result = $this->queryBilder->table('bugs')
+            ->where('user', 'mohammad')
+            ->where('link', 'http://link.com')
+            ->update(['email' => 'mohfunctional@gmail.com']);
+        $this->assertEquals(1, $result);
+    }
+
     public function testItCanDeleteRecord()
     {
         $result = $this->InsertInToDb();
@@ -50,15 +62,15 @@ class PdoQueryBilderTest extends TestCase
         return $config = Config::get("database", "pdo_testing");
     }
 
-    private function InsertInToDb()
+    private function InsertInToDb($options = [])
     {
 
-        $data = [
+        $data = array_merge([
             'name' => 'Firt Bug Report',
             'link' => "http://link.com",
             'user' => 'mohammad',
             'email' => 'mohammad@gmail.com'
-        ];
+        ], $options);
         return $this->queryBilder->table('bugs')->create($data);
     }
 

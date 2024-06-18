@@ -52,7 +52,7 @@ class PdoQueryBilder
             $felids[] = "{$coulm}='{$value}'";
         }
         $felids = implode(",", $felids);
-        $condition = implode("and", $this->condition);
+        $condition = implode(" and ", $this->condition);
 
         $sql = "Update {$this->table} SET {$felids} WHERE {$condition}";
         $query = $this->Connection->prepare($sql);
