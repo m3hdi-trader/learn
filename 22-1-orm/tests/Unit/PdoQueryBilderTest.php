@@ -79,6 +79,19 @@ class PdoQueryBilderTest extends TestCase
         $this->assertEquals(['name', 'user'], array_keys($result));
     }
 
+    public function testItCanFirstRow()
+    {
+        $this->mulitipleInSertInToDb(10, ['name' => 'First Row']);
+        $result = $this->queryBilder->table('bugs')->where('name', 'First Row')->first();
+
+        $this->assertIsObject($result);
+        $this->assertObjectHasProperty('id', $result);
+        $this->assertObjectHasProperty('email', $result);
+        $this->assertObjectHasProperty('link', $result);
+        $this->assertObjectHasProperty('name', $result);
+        $this->assertObjectHasProperty('user', $result);
+    }
+
     private function getConfig()
     {
         return $config = Config::get("database", "pdo_testing");
