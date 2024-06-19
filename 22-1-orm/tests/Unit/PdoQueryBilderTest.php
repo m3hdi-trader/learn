@@ -91,6 +91,26 @@ class PdoQueryBilderTest extends TestCase
         $this->assertObjectHasProperty('name', $result);
         $this->assertObjectHasProperty('user', $result);
     }
+    public function testItCanFindWhitId()
+    {
+        $this->InsertInToDb();
+        $id = $this->InsertInToDb(['name' => 'for find']);
+        $result = $this->queryBilder->table('bugs')->find($id);
+        $this->assertIsObject($result);
+        $this->assertEquals('for find', $result->name);
+    }
+
+    public function testItCanFindBy()
+    {
+        $this->InsertInToDb();
+        $id = $this->InsertInToDb(['name' => 'for find by']);
+        $result = $this->queryBilder->table('bugs')->findBy('name', 'for find by');
+        $this->assertIsObject($result);
+        $this->assertEquals($id, $result->id);
+    }
+
+
+
 
     private function getConfig()
     {

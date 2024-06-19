@@ -87,6 +87,16 @@ class PdoQueryBilder
         return empty($data) ? null : $data[0];
     }
 
+    public function find(int $id)
+    {
+        return $this->where('id', $id)->first();
+    }
+
+    public function findBy(string $colum, $value)
+    {
+        return $this->where($colum, $value)->first();
+    }
+
     public function truncateAllTable()
     {
         $query = $this->Connection->prepare("SHOW TABLES");
