@@ -35,3 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $queryBilder->table('bugs')->where('id', request()['id'])->update(request());
     json_respons(null, 200);
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $bug = $queryBilder->table('bugs')->find(request()['id']);
+    // var_dump($bug);
+    json_respons($bug, 200);
+}

@@ -36,7 +36,7 @@ class CrudTest extends TestCase
             ]
         ];
         $response = $this->httpClient->post('index.php', $data);
-        echo $response->getBody();
+        // echo $response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
 
 
@@ -61,6 +61,21 @@ class CrudTest extends TestCase
         $bug = $this->queryBilder->table('bugs')->find($bug->id);
         $this->assertNotNull($bug);
         $this->assertEquals('API For Update', $bug->name);
+    }
+
+    #[Depends('testItCanCreatDataWithAPI')]
+
+    public function testItcanfetchDatawhithAPI($bug)
+    {
+        $response = $this->httpClient->get('index.php', [
+            'json' => [
+                'id' => $bug->id
+            ]
+
+        ]);
+        echo ($response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('id', json_decode($response->getBody(), true));
     }
 
     public function tearDown(): void
