@@ -109,6 +109,30 @@ class PdoQueryBilderTest extends TestCase
         $this->assertEquals($id, $result->id);
     }
 
+    public function testItReturnsEmptyArrayWhenRecordNotFound()
+    {
+        $this->mulitipleInSertInToDb(4);
+        $result = $this->queryBilder->table('bugs')->where('user', 'dummyi')->get();
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
+    }
+
+    public function testItReturnsNullWhenFirstRecordNotFound()
+    {
+        $this->mulitipleInSertInToDb(4);
+        $result = $this->queryBilder->table('bugs')->where('user', 'dummyi')->first();
+        $this->assertNull($result);
+    }
+
+    public function testItReturnsZeroWhenRecordNotFoundForUpdate()
+    {
+        $this->mulitipleInSertInToDb(4);
+        $result = $this->queryBilder->table('bugs')->where('user', 'dummyi')->update(['name' => 'test']);
+        $this->assertEquals(0, $result);
+    }
+
+
+
 
 
 
