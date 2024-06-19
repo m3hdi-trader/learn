@@ -12,6 +12,7 @@ class PdoQueryBilder
     protected $Connection;
     protected $condition;
     protected $value;
+    protected $statement;
 
     public function __construct(DatabaseConnectionInterface $Connection)
     {
@@ -27,20 +28,25 @@ class PdoQueryBilder
     public function create(array $data)
     {
         $placeholder = [];
-        foreach ($data as $coulm => $value) {
-            $placeholder[] = '?';
+        foreach ($data as $coulm => $values) {
+            $placeholder[] = ' ? ';
         }
         $fileds = implode(',', array_keys($data));
         $placeholder = implode(',', $placeholder);
+        $this->value = array_values($data);
         $sql = "INSERT INTO {$this->table} ({$fileds}) VALUES({$placeholder})";
-        $query = $this->Connection->prepare($sql);
-        $query->execute(array_values($data));
+        $this->execute($sql);
+
         return (int)$this->Connection->lastInsertId();
     }
 
     public function where(string $coulm, string $value)
     {
-        $this->condition[] = "{$coulm}=?";
+        if (is_null($this->condition)) {
+            $this->condition = "{$coulm}=?";
+        } else {
+            $this->condition .= " AND {$coulm}=?";
+        }
         $this->value[] = $value;
         return $this;
     }
@@ -52,33 +58,28 @@ class PdoQueryBilder
             $felids[] = "{$coulm}='{$value}'";
         }
         $felids = implode(",", $felids);
-        $condition = implode(" and ", $this->condition);
-
-        $sql = "Update {$this->table} SET {$felids} WHERE {$condition}";
-        $query = $this->Connection->prepare($sql);
-        $query->execute($this->value);
-
-        return $query->rowCount();
+        $this->condition;
+        $sql = "Update {$this->table} SET {$felids} WHERE {$this->condition}";
+        $this->execute($sql);
+        return $this->statement->rowCount();
     }
 
     public function delete()
     {
-        $condition = implode("and", $this->condition);
+        $this->condition;
 
-        $sql = "DELETE FROM {$this->table} WHERE {$condition}";
-        $query = $this->Connection->prepare($sql);
-        $query->execute($this->value);
-        return $query->rowCount();
+        $sql = "DELETE FROM {$this->table} WHERE {$this->condition}";
+        $this->execute($sql);
+        return $this->statement->rowCount();
     }
 
     public function get(array $colums = ['*'])
     {
-        $condition = implode("and", $this->condition);
+        $this->condition;
         $colums = implode(",", $colums);
-        $sql = "SELECT {$colums} FROM {$this->table} WHERE {$condition}";
-        $query = $this->Connection->prepare($sql);
-        $query->execute($this->value);
-        return $query->fetchAll();
+        $sql = "SELECT {$colums} FROM {$this->table} WHERE {$this->condition}";
+        $this->execute($sql);
+        return $this->statement->fetchAll();
     }
 
     public function first($colums = ['*'])
@@ -114,5 +115,13 @@ class PdoQueryBilder
     public function rollback()
     {
         $this->Connection->rollback();
+    }
+
+    private function execute($sql)
+    {
+        $this->statement = $this->Connection->prepare($sql);
+        $this->statement->execute($this->value);
+        $this->value = [];
+        return $this;
     }
 }
