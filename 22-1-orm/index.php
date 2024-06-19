@@ -24,9 +24,14 @@ function request()
 {
     return json_decode(file_get_contents('php://input'), true);
 }
-var_dump(request());
+// var_dump(request());
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $queryBilder->table('bugs')->create(request());
+    json_respons(null, 200);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    $queryBilder->table('bugs')->where('id', request()['id'])->update(request());
     json_respons(null, 200);
 }

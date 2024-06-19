@@ -7,6 +7,8 @@ use App\Database\PdoQueryBilder as DatabasePdoQueryBilder;
 use App\Helpers\Config;
 use App\Helpers\HttpClient;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Depends;
+
 
 class CrudTest extends TestCase
 
@@ -40,6 +42,25 @@ class CrudTest extends TestCase
 
         $bug = $this->queryBilder->table('bugs')->where('name', 'API')->where('user', 'Ahmas')->first();
         $this->assertNotNull($bug);
+        return $bug;
+    }
+
+    #[Depends('testItCanCreatDataWithAPI')]
+
+    public function testItCanUpdateDataWhithAPI($bug)
+    {
+        $data = [
+            'json' => [
+                'id' => $bug->id,
+                'name' => 'API For Update'
+
+            ]
+        ];
+        $response = $this->httpClient->put('index.php', $data);
+        $this->assertEquals(200, $response->getStatusCode());
+        $bug = $this->queryBilder->table('bugs')->find($bug->id);
+        $this->assertNotNull($bug);
+        $this->assertEquals('API For Update', $bug->name);
     }
 
     public function tearDown(): void
