@@ -73,9 +73,24 @@ class CrudTest extends TestCase
             ]
 
         ]);
-        echo ($response->getBody());
+        // echo ($response->getBody());
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertArrayHasKey('id', json_decode($response->getBody(), true));
+    }
+
+    #[Depends('testItCanCreatDataWithAPI')]
+
+    public function testItcanDeleteDatawhithAPI($bug)
+    {
+        $response = $this->httpClient->delete('index.php', [
+            'json' => [
+                'id' => $bug->id
+            ]
+
+        ]);
+        $this->assertEquals(204, $response->getStatusCode());
+        $bug = $this->queryBilder->table('bugs')->find($bug->id);
+        $this->assertNull($bug);
     }
 
     public function tearDown(): void

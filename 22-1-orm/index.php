@@ -42,3 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // var_dump($bug);
     json_respons($bug, 200);
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $bug = $queryBilder->table('bugs')->where('id', request()['id'])->delete();
+    json_respons(null, 204);
+}
