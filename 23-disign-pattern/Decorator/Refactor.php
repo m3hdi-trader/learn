@@ -8,8 +8,6 @@ interface Cost
     public function getDetalis();
 }
 
-
-
 class BasketCost implements Cost
 {
     public function getCost()
@@ -34,6 +32,7 @@ class BasketCost implements Cost
         ];
     }
 }
+
 abstract class AbstractDecorator implements cost
 {
     protected $cost;
@@ -42,6 +41,7 @@ abstract class AbstractDecorator implements cost
     {
         $this->cost = $cost;
     }
+
     public function getTotalCost()
     {
         return $this->cost->getTotalCost() + static::getCost();
@@ -55,12 +55,8 @@ abstract class AbstractDecorator implements cost
     }
 }
 
-
 class ShippingDecorator extends AbstractDecorator
 {
-
-
-
     public function getCost()
     {
         return 12000;
@@ -74,7 +70,6 @@ class ShippingDecorator extends AbstractDecorator
 
 class basketWithTax extends AbstractDecorator
 {
-
     public function getCost()
     {
         return $this->cost->getTotalCost() * 0.09;
@@ -88,9 +83,6 @@ class basketWithTax extends AbstractDecorator
 
 class PackageDecorator extends AbstractDecorator
 {
-
-
-
     public function getCost()
     {
         return 5000;
